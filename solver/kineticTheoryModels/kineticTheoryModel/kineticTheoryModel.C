@@ -486,36 +486,7 @@ void Foam::kineticTheoryModel::solve
     //////////////////////
     // Contact dissipation
     //////////////////////
-
-    // Correlation length for the extended kinetic theory
-    volScalarField Lc
-    (
-        da_*(alpha_+alphaSmall)/(alpha_+alphaSmall)
-    );
-    if (extended_)
-    {// extended kinetic theory Jenkins (2007)
-        Lc = da_*max
-        (
-            scalar(1),
-            //0.5*pow(30./(1.+sqr(sqrtPi)/12.)*(1-e_)*sqr(alpha_)*gs0_, 1./3.)
-            //0.5*pow(30*sqr(alpha_+alphaSmall)*(1-e_)/(1+sqr(sqrtPi)*(1+e_)*
-            // (1-3*e_)/(1-1./4.*(1-sqr(e_))-5./24.*sqr(1-e_))), 1./3.)
-            0.5*pow(30*pow(alpha_+alphaSmall, 2)*(1-e_)/
-                     (1-Pi*(1+e_)*(1-3*e_)/
-                     (1-1./4.*pow(1-e_, 2)-5./24.*(1-pow(e_, 2)))
-                     ), 1./3.)
-            *pow((alpha_+alphaSmall)*gs0_, 2./9.)
-        );
-    }
-    // Inelastic dissipation (Eq. 3.24, p.50)
-    volScalarField gammaCoeff
-    (
-        (3.0*(1.0 - sqr(e_))*sqr(alpha_)*rhoa_*gs0_
-            *(4.0/Lc*ThetaSqrt/sqrtPi-tr(D)))
-    );
-    // Frictional dissipation (Chialvo and Sundaresan (2013) eqs. 22-23)
-    //dimensionedScalar f_mu(3./2*muPart_*exp(-3*muPart_));
-    // Frictional dissipation (Jenkins & Zhang (2002))
+    
     dimensionedScalar f_mu(0);
     if (muPart_>alphaSmall)
     {
@@ -531,6 +502,59 @@ void Foam::kineticTheoryModel::solve
         f_mu = 1./2*(a1-a2*b1/b2);
     }
     dimensionedScalar e_eff(e_ - f_mu);
+
+    // Correlation length for the extended kinetic theory
+    volScalarField Lc
+    (
+        da_*(alpha_+alphaSmall)/(alpha_+alphaSmall)
+    );
+
+    if (extended_)
+    {// extended kinetic theory Jenkins (2007)
+        /*
+        Lc = da_*max
+        (
+            scalar(1),
+            //0.5*pow(30./(1.+sqr(sqrtPi)/12.)*(1-e_)*sqr(alpha_)*gs0_, 1./3.)
+            //0.5*pow(30*sqr(alpha_+alphaSmall)*(1-e_)/(1+sqr(sqrtPi)*(1+e_)*
+            // (1-3*e_)/(1-1./4.*(1-sqr(e_))-5./24.*sqr(1-e_))), 1./3.)
+            0.5*pow(30*pow(alpha_+alphaSmall, 2)*(1-e_)/
+                     (1-Pi*(1+e_)*(1-3*e_)/
+                     (1-1./4.*pow(1-e_, 2)-5./24.*(1-pow(e_, 2)))
+                     ), 1./3.)
+            *pow((alpha_+alphaSmall)*gs0_, 2./9.)
+        );
+        */
+        //Berzi (2024)
+        //Kinetic viscosity
+        const volScalarField muk = 5*sqrtPi/96*(1-2./5*(1+e_)*(1-3*e_)*alpha_*gs0_)/
+              ((1-0.25*pow((1-e_), 2)-5./24*(1-pow(e_, 2)))*gs0_);
+        //Contact viscosity
+        const volScalarField muc = muk*(4./5*(1+e_)*alpha_*gs0_);
+        //Bulk viscosity
+        const volScalarField mub = 4/(5*sqrtPi)*(1+e_)*pow(alpha_, 2)*gs0_;
+
+        const volScalarField F2 = muk + muc + mub;
+        const volScalarField J = 5*sqrtPi/(8*sqr(alpha_+alphaSmall)*gs0_)*F2;
+
+        Lc = da_*max
+        (
+            scalar(1),
+            sqrt(2*J/(15*(1-pow(e_eff,2)))) * pow(1 +
+            26*(1-e_eff)/15*Foam::pos(alpha_-0.49)*(alpha_-0.49)/(alphaMax_-alpha_),3/2) *
+            da_*mag(dU)/(ThetaSqrt + pow(Tsmall, 0.5))
+        );
+    }
+    // Inelastic dissipation (Eq. 3.24, p.50)
+    volScalarField gammaCoeff
+    (
+        (3.0*(1.0 - sqr(e_))*sqr(alpha_)*rhoa_*gs0_
+            *(4.0/Lc*ThetaSqrt/sqrtPi-tr(D)))
+    );
+
+    // Frictional dissipation (Chialvo and Sundaresan (2013) eqs. 22-23)
+    //dimensionedScalar f_mu(3./2*muPart_*exp(-3*muPart_));
+    // Frictional dissipation (Jenkins & Zhang (2002))
     dimensionedScalar fric_correction((1-pow(e_eff, 2))/(1-pow(e_, 2)));
     gammaCoeff *= fric_correction;
 
