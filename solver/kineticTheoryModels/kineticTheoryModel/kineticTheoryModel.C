@@ -536,6 +536,8 @@ void Foam::kineticTheoryModel::solve
 
         const volScalarField F2 = muk + muc + mub;
         const volScalarField J = 5*sqrtPi/(8*sqr(alpha_+alphaSmall)*gs0_)*F2;
+        //const volScalarField J = (1+e_)/2 + Pi/32*(5-2*(1+e_)*(1-3*e_))*(5+4*(1+e_)*alpha_*gs0_)/
+        //      ((24-6*sqr(1-e_)-5*(1-sqr(e_)))*sqr((alpha_+alphaSmall)*gs0_));
 
         Lc = da_*max
         (

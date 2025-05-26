@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "GarzoDuftyViscosity.H"
+#include "GarzoDuftyOriginalViscosity.H"
 #include "mathematicalConstants.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -33,15 +33,15 @@ namespace Foam
 {
 namespace kineticTheoryModels
 {
-    defineTypeNameAndDebug(GarzoDuftyViscosity, 0);
-    addToRunTimeSelectionTable(viscosityModel, GarzoDuftyViscosity, dictionary);
+    defineTypeNameAndDebug(GarzoDuftyOriginalViscosity, 0);
+    addToRunTimeSelectionTable(viscosityModel, GarzoDuftyOriginalViscosity, dictionary);
 } // End namespace kineticTheoryModels
 } // End namespace Foam
 
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::kineticTheoryModels::GarzoDuftyViscosity::GarzoDuftyViscosity
+Foam::kineticTheoryModels::GarzoDuftyOriginalViscosity::GarzoDuftyOriginalViscosity
 (
     const dictionary& dict
 )
@@ -52,14 +52,14 @@ Foam::kineticTheoryModels::GarzoDuftyViscosity::GarzoDuftyViscosity
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::kineticTheoryModels::GarzoDuftyViscosity::~GarzoDuftyViscosity()
+Foam::kineticTheoryModels::GarzoDuftyOriginalViscosity::~GarzoDuftyOriginalViscosity()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 Foam::tmp<Foam::volScalarField>
-Foam::kineticTheoryModels::GarzoDuftyViscosity::mua
+Foam::kineticTheoryModels::GarzoDuftyOriginalViscosity::mua
 (
     const volScalarField& alpha,
     const volScalarField& Theta,
@@ -83,13 +83,13 @@ Foam::kineticTheoryModels::GarzoDuftyViscosity::mua
     const volScalarField mub = 4/(5*sqrtPi)*(1+e)*pow(alpha, 2)*g0;
 
     //Total viscosity accounting for saltation
-    const volScalarField muTot = muk*musalt/(musalt+muk) + muc + mub;
+    const volScalarField muTot = muk + muc + mub;
 
     return rhoa*da*sqrt(Theta)*muTot;
 }
 
 Foam::tmp<Foam::volScalarField>
-Foam::kineticTheoryModels::GarzoDuftyViscosity::lambda
+Foam::kineticTheoryModels::GarzoDuftyOriginalViscosity::lambda
 (
     const volScalarField& alpha,
     const volScalarField& Theta,

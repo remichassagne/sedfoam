@@ -73,15 +73,15 @@ Foam::tmp<Foam::volScalarField> Foam::GarzoDuftyPseudoConductivity::kappaAlpha
 ) const
 {
     const scalar sqrtPi = sqrt(constant::mathematical::pi);
+    const scalar alphaSmall = 1e-5;
 
     //Kinetic conductivity
-    const volScalarField kappak = 125*sqrtPi/64 *
+    const volScalarField kappak = 125*sqrtPi/256 / ((1+3/16*(1-e))*(1+e)*(alpha+alphaSmall)*g0) *
             (
              (1+3./5*pow(1+e, 2)*(2*e-1)*alpha*g0)/((1-7./16*(1-e))*(1+e)*g0)\
              *(1-pow(e, 2))*(g0+alpha*g0prime)
-             - 6./25*alpha*(g0+alpha/2*g0prime)*e*(1-pow(e, 2))
-            )/
-            ((1+3./16*(1-e))*(1+e)*g0);
+             - 24./25*alpha*(g0+alpha/2*g0prime)*e*(1-pow(e, 2))
+            );
     //Contact conductivity
     const volScalarField kappac = 6./5*alpha*g0*(1+e)*kappak;
 

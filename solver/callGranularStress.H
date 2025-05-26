@@ -75,10 +75,19 @@ if (kineticTheory.on())
     );
 
     // Compute Frictional viscosity
+    /*
     volScalarField muEff_f
     (
         pff*Foam::sin(kineticTheory.phi())
        /sqrt(pow(magDtensor, 2) + Dsmall2)
+    );*/
+    // Kamrin
+    const int n = 4;
+    volScalarField muEff_f
+    (
+        pow(rhoa, 1/(2*n)-1/6)*pow(phasea->d(), 1/n)*pow(pff, 7/6-1/(2*n)) *
+        pow(sqrt(pow(magDtensor, 2)+Dsmall2), 1/n-1)*
+        pow(kineticTheory.Theta(), -1/6)
     );
 
     // the actual expression for nuFra depends on the way this term is
