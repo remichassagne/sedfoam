@@ -63,7 +63,7 @@ if (kineticTheory.on())
     (
         "Dsmall2",
         dimensionSet(0, 0, -2, 0, 0, 0, 0),
-        1e-8
+        1e-16
     );
     Dsmall2 = sqr(Dsmall);
 
