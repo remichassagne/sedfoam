@@ -21,6 +21,7 @@ License
 
 gradUaT = fvc::grad(Ua)().T();
 gradUbT = fvc::grad(Ub)().T();
+
 volScalarField magDtensor
 (
     ::sqrt(2.0)*mag(symm(gradUaT))
@@ -63,7 +64,7 @@ if (kineticTheory.on())
     (
         "Dsmall2",
         dimensionSet(0, 0, -2, 0, 0, 0, 0),
-        1e-16
+        1e-2
     );
     Dsmall2 = sqr(Dsmall);
 
@@ -81,13 +82,17 @@ if (kineticTheory.on())
         pff*Foam::sin(kineticTheory.phi())
        /sqrt(pow(magDtensor, 2) + Dsmall2)
     );*/
+    
     // Kamrin
-    const int n = 4;
+    const double n = 4;
     volScalarField muEff_f
     (
-        pow(rhoa, 1/(2*n)-1/6)*pow(phasea->d(), 1/n)*pow(pff, 7/6-1/(2*n)) *
-        pow(sqrt(pow(magDtensor, 2)+Dsmall2), 1/n-1)*
-        pow(kineticTheory.Theta(), -1/6)
+        0.2*
+        pow(rhoa, 1./(2*n)-1./6.)*
+        pow(phasea->d(), 1./n)*
+        pow(pff, 7./6.-1./(2*n)) *
+        pow(sqrt(pow(magDtensor, 2)+Dsmall2), 1/n-1.)*
+        pow(kineticTheory.Theta(), -1./6.)
     );
 
     // the actual expression for nuFra depends on the way this term is
