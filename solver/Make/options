@@ -23,7 +23,7 @@ EXE_INC = \
     -IgranularRheologyModels/lnInclude \
     -IinterfacialModels/lnInclude \
     -IphaseModel/lnInclude \
-    -IppModel/lnInclude \
+    -IelasticModels/lnInclude \
     -Iaveraging
 
 EXE_LIBS = \

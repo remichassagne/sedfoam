@@ -75,11 +75,14 @@ if (kineticTheory.on())
     );
 
     // Compute Frictional viscosity
+    /*
     volScalarField muEff_f
     (
         pff*Foam::sin(kineticTheory.phi())
        /sqrt(pow(magDtensor, 2) + Dsmall2)
     );
+    */
+    volScalarField muEff_f = muEff->muEff(pff, magDtensor, kineticTheory.Theta());
 
     // the actual expression for nuFra depends on the way this term is
     // discretized in UaEqn

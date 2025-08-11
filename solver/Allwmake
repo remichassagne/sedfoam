@@ -22,7 +22,7 @@ set -x
 
 wmake libso phaseModel
 wmake libso interfacialModels
-wmake libso ppModel
+wmake libso elasticModels
 wmake libso kineticTheoryModels
 wmake libso granularRheologyModels
 wmake

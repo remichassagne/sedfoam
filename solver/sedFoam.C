@@ -60,6 +60,7 @@ Date
 #include "dragModel.H"
 #include "phaseModel.H"
 #include "ppModel.H"
+#include "muEffModel.H"
 
 #include "kineticTheoryModel.H"
 #include "granularRheologyModel.H"

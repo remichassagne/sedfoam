@@ -737,6 +737,13 @@ autoPtr<ppModel> pp = ppModel::New
     phaseb
 );
 
+autoPtr<muEffModel> muEff = muEffModel::New
+(
+    ppProperties,
+    phasea,
+    phaseb
+);
+
 // Initalize Kinetic theory
 kineticTheoryModel kineticTheory
 (

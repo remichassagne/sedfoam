@@ -1,0 +1,13 @@
+ppModels/ppModel.C
+ppModels/newPpModel.C
+ppModels/JohnsonJackson/JohnsonJackson.C
+ppModels/MerckelbachKranenburg/MerckelbachKranenburg.C
+ppModels/Chauchat/Chauchat.C
+ppModels/Hsu/Hsu.C
+
+muEffModels/muEffModel.C
+muEffModels/newMuEffModel.C
+muEffModels/Coulomb/Coulomb.C
+muEffModels/Kamrin/Kamrin.C
+
+LIB = $(FOAM_MODULE_LIBBIN)/libEulerianPpSedModels
